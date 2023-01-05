@@ -1,6 +1,7 @@
+import { IoSearchOutline } from 'react-icons/io5';
 import PropTypes from 'prop-types';
 import {
-  SearchBar,
+  SearchBox,
   SearchForm,
   Button,
   Label,
@@ -9,9 +10,10 @@ import {
 
 export function Searchbar({ onSubmit }) {
   return (
-    <SearchBar>
+    <SearchBox>
       <SearchForm onSubmit={onSubmit}>
         <Button type="submit">
+          <IoSearchOutline size={24} />
           <Label>Search</Label>
         </Button>
         <Input
@@ -22,10 +24,10 @@ export function Searchbar({ onSubmit }) {
           placeholder="Search images and photos"
         />
       </SearchForm>
-    </SearchBar>
+    </SearchBox>
   );
 }
 
-SearchBar.propTypes = {
-  onSubmit: PropTypes.func,
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };

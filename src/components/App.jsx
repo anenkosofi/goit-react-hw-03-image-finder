@@ -14,6 +14,7 @@ export class App extends Component {
     page: 1,
     query: '',
     images: [],
+    total: 0,
     largeImage: '',
     error: '',
     status: 'idle',
@@ -26,10 +27,11 @@ export class App extends Component {
     ) {
       this.setState({ status: 'pending' });
       fetchImages({ query: this.state.query, page: this.state.page })
-        .then(({ total, hits }) => {
-          if (total) {
+        .then(({ totalHits, hits }) => {
+          if (totalHits) {
             this.setState(prevState => ({
               images: [...prevState.images, ...hits],
+              total: totalHits,
               status: 'resolved',
             }));
           } else {
@@ -42,15 +44,16 @@ export class App extends Component {
 
   handleFormSubmit = e => {
     e.preventDefault();
+    const query = e.target.elements.query.value.trim().toLowerCase();
 
-    if (!e.target.elements.query.value) {
+    if (!query) {
       alert('Search box cannot be empty. Please enter the word.');
       return;
     }
 
     this.setState({
       page: 1,
-      query: e.target.elements.query.value,
+      query,
       images: [],
     });
 
@@ -73,7 +76,8 @@ export class App extends Component {
   };
 
   render() {
-    if (this.state.status === 'idle') {
+    const { query, images, total, largeImage, status } = this.state;
+    if (status === 'idle') {
       return (
         <Wrapper>
           <GlobalStyle />
@@ -82,12 +86,12 @@ export class App extends Component {
         </Wrapper>
       );
     }
-    if (this.state.status === 'pending') {
+    if (status === 'pending') {
       return (
         <Wrapper>
           <GlobalStyle />
           <Searchbar onSubmit={this.handleFormSubmit} />
-          <ImageGallery items={this.state.images} onClick={this.openModal} />
+          <ImageGallery items={images} onClick={this.openModal} />
           <ThreeDots
             height="50"
             width="50"
@@ -102,27 +106,27 @@ export class App extends Component {
         </Wrapper>
       );
     }
-    if (this.state.status === 'rejected') {
+    if (status === 'rejected') {
       return (
         <Wrapper>
           <GlobalStyle />
           <Searchbar onSubmit={this.handleFormSubmit} />
           <Notification
-            message={`No results containing ${this.state.query} were found.`}
+            message={`No results containing ${query} were found.`}
           />
         </Wrapper>
       );
     }
-    if (this.state.status === 'resolved') {
+    if (status === 'resolved') {
       return (
         <Wrapper>
           <GlobalStyle />
           <Searchbar onSubmit={this.handleFormSubmit} />
-          <ImageGallery items={this.state.images} onClick={this.openModal} />
-          {this.state.largeImage.length > 0 && (
-            <Modal onClose={this.closeModal} image={this.state.largeImage} />
+          <ImageGallery items={images} onClick={this.openModal} />
+          {largeImage.length > 0 && (
+            <Modal onClose={this.closeModal} image={largeImage} />
           )}
-          <Button onClick={this.loadMore} />
+          {images.length < total && <Button onClick={this.loadMore} />}
         </Wrapper>
       );
     }

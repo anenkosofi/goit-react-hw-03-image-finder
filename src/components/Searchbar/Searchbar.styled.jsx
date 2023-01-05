@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const SearchBar = styled.header`
+const SearchBox = styled.header`
   top: 0;
   left: 0;
   position: sticky;
@@ -34,10 +34,6 @@ const Button = styled.button`
   width: 48px;
   height: 48px;
   border: 0;
-  background-image: url('https://image.flaticon.com/icons/svg/149/149852.svg');
-  background-size: 40%;
-  background-repeat: no-repeat;
-  background-position: center;
   opacity: 0.6;
   transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
@@ -75,4 +71,4 @@ const Input = styled.input`
   font-size: 18px;
 `;
 
-export { SearchBar, SearchForm, Button, Label, Input };
+export { SearchBox, SearchForm, Button, Label, Input };
